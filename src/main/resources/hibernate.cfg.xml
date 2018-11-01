@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Connection settings -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://104.207.130.153:5432/greenchain</property>
+        <property name="hibernate.connection.username">chain</property>
+        <property name="hibernate.connection.password">chain</property>
+        <!-- SQL dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
+        <!-- Print executed SQL to stdout -->
+        <property name="show_sql">true</property>
+        <property name="hibernate.connection.pool_size">10</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.c3p0.min_size">5</property>
+        <property name="hibernate.c3p0.max_size">100</property>
+        <property name="hibernate.c3p0.max_statements">20</property>
+
+        <!-- Drop and re-create all database on startup
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+    -->
+        <mapping class="tears.request.Client"/>
+        <mapping class="tears.request.ClientInfo"/>
+        <mapping class="tears.request.ProductInfo"/>
+        <mapping class="tears.request.Credit"/>
+        <mapping class="tears.request.Deposit"/>
+        <mapping class="tears.request.CreditParam"/>
+        <mapping class="tears.request.DepositParam"/>
+        <mapping class="tears.request.DepositParam"/>
+        <mapping class="tears.response.PDResponse"/>
+        <mapping class="tears.telegram.TGUser"/>
+
+
+    </session-factory>
+
+</hibernate-configuration>
+
