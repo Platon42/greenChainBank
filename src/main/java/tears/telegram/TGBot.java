@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class TGBot extends TelegramLongPollingBot {
 
@@ -66,7 +67,7 @@ public class TGBot extends TelegramLongPollingBot {
                             HibernateUtils.setTelegramUser(tgUser, update, 1,false);
                             execute(message);
                         } else {
-                            if (update.getMessage().getText().startsWith("0x")) {
+                            if (update.getMessage().getText().startsWith("0x") && HibernateUtils.getTGStep(update)==1) {
 
                                 HibernateUtils.setTelegramUser(tgUser, update, 2,false); //кошелек
                                 message.setChatId(update.getMessage().getChatId())
@@ -99,7 +100,7 @@ public class TGBot extends TelegramLongPollingBot {
                             message.setChatId(update.getMessage().getChatId()).setText("Ваш адрес" + "\n"+address);
                             execute(message);
                             message.setChatId(update.getMessage().getChatId()).setText("Ваш пароль" + "\n"+pass);
-
+                            execute(message);
                             message.setChatId(update.getMessage().getChatId()).setText("Ваш файл" + "\n");
                             execute(message);
                             document.setChatId(update.getMessage().getChatId())
@@ -129,6 +130,20 @@ public class TGBot extends TelegramLongPollingBot {
                             HibernateUtils.setTelegramUser(tgUser, update, 32,false);
                             execute(message);
                         }
+
+                        if (update.getMessage().getText().contains("/balance")){
+                            message.setChatId(update.getMessage().getChatId())
+                                    .setText("Добрый день! Введите свой адрес кошелька");
+                            HibernateUtils.setTelegramUser(tgUser, update, 41,false);
+                            execute(message);
+                        } else {
+                                if (update.getMessage().getText().startsWith("0x") && HibernateUtils.getTGStep(update) == 41 ){
+                                message.setChatId(update.getMessage().getChatId())
+                                        .setText("Ваш баланс " + EtherUtils.getBalance(update.getMessage().getText()));
+                                execute(message);
+                            }
+
+                        }
                         if (update.getMessage().hasDocument()) {
 
                             String fileId = update.getMessage().getDocument().getFileId();
@@ -154,7 +169,7 @@ public class TGBot extends TelegramLongPollingBot {
 
                     }
                 }
-            } catch (TelegramApiException | CipherException | IOException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
+            } catch (TelegramApiException | CipherException | IOException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException | InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }

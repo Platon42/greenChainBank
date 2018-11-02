@@ -9,6 +9,8 @@ import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.admin.methods.response.PersonalUnlockAccount;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
@@ -17,6 +19,7 @@ import org.web3j.utils.Convert;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,6 +28,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class EtherUtils {
 
@@ -85,6 +89,15 @@ public class EtherUtils {
 
         return res;
     }
+    public static BigInteger getBalance(String address) throws InterruptedException, ExecutionException {
+
+        Admin admin = Admin.build(new HttpService(ETHER_ADDRESS));  // defaults to http://localhost:8545/
+
+        EthGetBalance ethGetBalance = admin.ethGetBalance(address,DefaultBlockParameterName.LATEST).sendAsync().get();
+
+        return ethGetBalance.getBalance();
+    }
+
 
 
 }
